@@ -138,6 +138,17 @@
   .chip-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
   .chip-score { font-size: 11px; opacity: .6; font-weight: 400; }
 
+  /* Email section */
+  .email-section { margin-top: 32px; padding: 24px 28px; background: white; border: 1px solid var(--border); border-radius: 16px; }
+  .email-label { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 12px; letter-spacing: .01em; }
+  .email-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .email-row input[type="email"] { flex: 1; min-width: 200px; font-family: 'DM Sans', sans-serif; font-size: 15px; padding: 12px 16px; border: 1.5px solid var(--border-strong); border-radius: 40px; background: var(--paper); color: var(--ink); outline: none; transition: border-color .2s; }
+  .email-row input[type="email"]:focus { border-color: var(--green-mid); }
+  .email-row input[type="email"]::placeholder { color: var(--ink-muted); }
+  .btn-email { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; padding: 12px 24px; border-radius: 40px; background: var(--green-dark); color: white; border: none; cursor: pointer; white-space: nowrap; transition: all .18s; letter-spacing: .02em; }
+  .btn-email:hover { background: var(--green-mid); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(42,122,74,0.25); }
+  .email-note { font-size: 12px; color: var(--ink-muted); margin-top: 10px; }
+
   footer { padding: 24px 40px; border-top: 1px solid var(--border); font-size: 12px; color: var(--ink-muted); width: 100%; text-align: center; }
 
   @media (max-width: 500px) {
@@ -182,15 +193,15 @@
       <div id="queue-list"></div>
       <div class="matrix-cta">
         <div>
-          <div class="matrix-cta-text" id="cta-text">Add more assets, or see the matrix now.</div>
-          <div class="matrix-cta-sub">You can always add more after.</div>
+          <div class="matrix-cta-text" id="cta-text">Ready to see your matrix? Or add another asset first.</div>
+          <div class="matrix-cta-sub">You can always add more assets after plotting.</div>
         </div>
         <button class="btn-plot" onclick="showMatrix()">Show the matrix →</button>
       </div>
     </div>
 
     <div class="step-pill"><span class="step-dot"></span><span id="step1-label">Step 1 of 3</span></div>
-    <h1 class="q-label">Which asset are we<br><em>rating first?</em></h1>
+    <h1 class="q-label">Which asset are we<br><em id="rating-label">rating first?</em></h1>
     <p class="q-hint">Name the business, investment, job, or income source you want to look at. For best results, get granular — one individual asset or role at a time.</p>
     <div class="text-input-wrap">
       <input type="text" id="asset-name" placeholder="e.g. Rental Property, Private Lending, LP Position…" autocomplete="off" />
@@ -260,6 +271,15 @@
     <div class="btn-row">
       <button class="btn btn-primary" onclick="addAnother()">+ Rate another asset</button>
     </div>
+
+    <div class="email-section" id="email-section">
+      <div class="email-label">Send my results to my inbox</div>
+      <div class="email-row">
+        <input type="email" id="email-input" placeholder="your@email.com" />
+        <button class="btn-email" onclick="sendEmail()">Email this to me</button>
+      </div>
+      <div class="email-note">Opens your email app with your results ready to send.</div>
+    </div>
   </div>
 
 </main>
@@ -324,6 +344,8 @@
     wrap.style.display = 'block';
     const intro = document.getElementById('intro-section');
     if (intro) intro.style.display = 'none';
+    const ratingLabel = document.getElementById('rating-label');
+    if (ratingLabel) ratingLabel.textContent = 'rating next?';
     document.getElementById('queue-list').innerHTML = assets.map(a => {
       const q = getQuadrant(a.roi, a.robs);
       return `<div class="queue-item">
@@ -337,7 +359,7 @@
     }).join('');
     const n = assets.length;
     document.getElementById('cta-text').textContent =
-      n === 1 ? 'Add more assets, or see the matrix now.' : `${n} assets rated. Ready to plot?`;
+      n === 1 ? 'Ready to see your matrix? Or add another asset first.' : `${n} assets rated. Ready to plot?`;
   }
 
   function showMatrix() {
@@ -438,6 +460,27 @@
     document.getElementById('step1-label').textContent = `Asset ${assets.length+1} — Step 1 of 3`;
     renderQueue();
     goToStep(1);
+  }
+
+  function sendEmail() {
+    const email = document.getElementById('email-input').value.trim();
+    if (!email) { document.getElementById('email-input').focus(); return; }
+
+    const subject = encodeURIComponent('My Asset Matrix Results');
+
+    let body = 'Here are my Asset Matrix results:\n\n';
+    assets.forEach(a => {
+      const q = getQuadrant(a.roi, a.robs);
+      body += `${a.name}\n`;
+      body += `  ROI: ${a.roi}/10   ROBS: ${a.robs}/10\n`;
+      body += `  Verdict: ${q.label}\n\n`;
+    });
+    body += '---\n';
+    body += 'Generated with the Asset Matrix tool — a companion to Return On Brain Space by Mandy McAllister.\n';
+    body += 'goodfortunecapital.github.io/matrix';
+
+    const mailto = `mailto:${email}?subject=${subject}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailto;
   }
 
   document.getElementById('asset-name').addEventListener('keydown', e => {
