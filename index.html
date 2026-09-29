@@ -273,12 +273,12 @@
     </div>
 
     <div class="email-section" id="email-section">
-      <div class="email-label">Send my results to my inbox</div>
+      <div class="email-label">Want your results in your inbox?</div>
       <div class="email-row">
         <input type="email" id="email-input" placeholder="your@email.com" />
-        <button class="btn-email" onclick="sendEmail()">Email this to me</button>
+        <button class="btn-email" onclick="sendEmail()">Email me my results</button>
       </div>
-      <div class="email-note">Opens your email app with your results ready to send.</div>
+      <div class="email-note">We will send your results straight to you. No spam, ever.</div>
     </div>
   </div>
 
@@ -466,9 +466,9 @@
     const email = document.getElementById('email-input').value.trim();
     if (!email) { document.getElementById('email-input').focus(); return; }
 
-    const subject = encodeURIComponent('My Asset Matrix Results');
-
-    let body = 'Here are my Asset Matrix results:\n\n';
+    // Build results summary
+    const subject = encodeURIComponent('Your Asset Matrix Results');
+    let body = 'Here are your Asset Matrix results:\n\n';
     assets.forEach(a => {
       const q = getQuadrant(a.roi, a.robs);
       body += `${a.name}\n`;
@@ -476,11 +476,20 @@
       body += `  Verdict: ${q.label}\n\n`;
     });
     body += '---\n';
-    body += 'Generated with the Asset Matrix tool — a companion to Return On Brain Space by Mandy McAllister.\n';
+    body += 'Generated with the Asset Matrix — a companion to Return On Brain Space by Mandy McAllister.\n';
     body += 'goodfortunecapital.github.io/matrix';
 
+    // Fire the mailto to send results to their inbox
     const mailto = `mailto:${email}?subject=${subject}&body=${encodeURIComponent(body)}`;
     window.location.href = mailto;
+
+    // Simultaneously open ClickFunnels to capture their email
+    const cfUrl = `https://programs.mandymcallister.com/your-personalized-portfolio-results-are-ready?email=${encodeURIComponent(email)}`;
+    window.open(cfUrl, '_blank');
+
+    // Show confirmation
+    const section = document.getElementById('email-section');
+    section.innerHTML = '<div style="padding:16px 0;font-size:15px;color:var(--green-dark);font-weight:500;">Results sent! Check your inbox.</div>';
   }
 
   document.getElementById('asset-name').addEventListener('keydown', e => {
