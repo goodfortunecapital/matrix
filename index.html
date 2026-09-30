@@ -274,11 +274,18 @@
 
     <div class="email-section" id="email-section">
       <div class="email-label">Want your results in your inbox?</div>
-      <div class="email-row">
-        <input type="email" id="email-input" placeholder="your@email.com" />
-        <button class="btn-email" onclick="sendEmail()">Email me my results</button>
-      </div>
-      <div class="email-note">We will send your results straight to you. No spam, ever.</div>
+      <div class="email-note" style="margin-bottom:12px;">Enter your email and we will send your results straight to you. No spam, ever.</div>
+      <iframe
+        id="jotform-iframe"
+        title="Asset Matrix Email Capture"
+        src="https://form.jotform.com/262724569077064"
+        style="width:100%;min-height:220px;border:none;border-radius:8px;background:transparent;"
+        scrolling="no"
+        allow="geolocation; microphone; camera"
+        frameborder="0">
+      </iframe>
+      <script src="https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js"></script>
+      <script>window.jotformEmbedHandler("iframe[id='jotform-iframe']", "https://form.jotform.com/")</script>
     </div>
   </div>
 
@@ -462,35 +469,7 @@
     goToStep(1);
   }
 
-  function sendEmail() {
-    const email = document.getElementById('email-input').value.trim();
-    if (!email) { document.getElementById('email-input').focus(); return; }
 
-    // Build results summary
-    const subject = encodeURIComponent('Your Asset Matrix Results');
-    let body = 'Here are your Asset Matrix results:\n\n';
-    assets.forEach(a => {
-      const q = getQuadrant(a.roi, a.robs);
-      body += `${a.name}\n`;
-      body += `  ROI: ${a.roi}/10   ROBS: ${a.robs}/10\n`;
-      body += `  Verdict: ${q.label}\n\n`;
-    });
-    body += '---\n';
-    body += 'Generated with the Asset Matrix — a companion to Return On Brain Space by Mandy McAllister.\n';
-    body += 'goodfortunecapital.github.io/matrix';
-
-    // Fire the mailto to send results to their inbox
-    const mailto = `mailto:${email}?subject=${subject}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailto;
-
-    // Simultaneously open ClickFunnels to capture their email
-    const cfUrl = `https://programs.mandymcallister.com/your-personalized-portfolio-results-are-ready?email=${encodeURIComponent(email)}`;
-    window.open(cfUrl, '_blank');
-
-    // Show confirmation
-    const section = document.getElementById('email-section');
-    section.innerHTML = '<div style="padding:16px 0;font-size:15px;color:var(--green-dark);font-weight:500;">Results sent! Check your inbox.</div>';
-  }
 
   document.getElementById('asset-name').addEventListener('keydown', e => {
     if (e.key === 'Enter') goToStep2();
