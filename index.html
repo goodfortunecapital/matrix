@@ -426,13 +426,13 @@
 
     ctx.font='400 9px "DM Sans",sans-serif'; ctx.fillStyle='#aaa8a0';
     for (let i=1;i<=10;i++) {
-      ctx.textAlign='center'; ctx.fillText(i, pL+((i-1)/9)*pw, pT+ph+13);
-      ctx.textAlign='right';  ctx.fillText(i, pL-5, pT+ph-((i-1)/9)*ph+3);
+      ctx.textAlign='center'; ctx.fillText(i, pL+((i-0.5)/10)*pw, pT+ph+13);
+      ctx.textAlign='right';  ctx.fillText(i, pL-5, pT+ph-((i-0.5)/10)*ph+3);
     }
 
     assets.forEach(a => {
-      const px = pL+((a.robs-1)/9)*pw;
-      const py = pT+ph-((a.roi-1)/9)*ph;
+      const px = pL+((a.robs-0.5)/10)*pw;
+      const py = pT+ph-((a.roi-0.5)/10)*ph;
       const q  = getQuadrant(a.roi, a.robs);
       ctx.beginPath(); ctx.arc(px,py,16,0,Math.PI*2);
       ctx.fillStyle=q.dot+'28'; ctx.fill();
