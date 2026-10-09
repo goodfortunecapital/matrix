@@ -393,18 +393,18 @@
     ctx.clearRect(0, 0, W, H);
 
     [
-      { x:pL,  y:pT,  w:pw/2, h:ph/2, c:'#c8edda' },
-      { x:mx,  y:pT,  w:pw/2, h:ph/2, c:'#fff0a0' },
-      { x:pL,  y:my,  w:pw/2, h:ph/2, c:'#dff09a' },
-      { x:mx,  y:my,  w:pw/2, h:ph/2, c:'#fbbfbf' },
+      { x:pL,  y:pT,  w:mx-pL,      h:my-pT,      c:'#c8edda' },
+      { x:mx,  y:pT,  w:pL+pw-mx,   h:my-pT,      c:'#fff0a0' },
+      { x:pL,  y:my,  w:mx-pL,      h:pT+ph-my,   c:'#dff09a' },
+      { x:mx,  y:my,  w:pL+pw-mx,   h:pT+ph-my,   c:'#fbbfbf' },
     ].forEach(f => { ctx.fillStyle=f.c; ctx.fillRect(f.x,f.y,f.w,f.h); });
 
     ctx.textAlign = 'center';
     [
-      { x:pL+pw*.25, y:pT+22,  m:'DOUBLE DOWN',              s:'High Income, Low Stress',    mc:'#1e6b38', sc:'#3a8a52' },
-      { x:pL+pw*.75, y:pT+22,  m:'Automate or position for sale', s:'High Income, High Stress',  mc:'#7a5800', sc:'#9a7000' },
-      { x:pL+pw*.25, y:my+22,  m:'Maintenance',               s:'Low Income, Low Stress',    mc:'#445818', sc:'#607830' },
-      { x:pL+pw*.75, y:my+22,  m:'GET OUT!!!!!!',              s:'Low Income, High Stress',   mc:'#8a1818', sc:'#aa2828' },
+      { x:pL+(mx-pL)/2, y:pT+22,  m:'DOUBLE DOWN',            s:'High Income, Low Stress',    mc:'#1e6b38', sc:'#3a8a52' },
+      { x:mx+(pL+pw-mx)/2, y:pT+22,  m:'Automate or position for sale', s:'High Income, High Stress',  mc:'#7a5800', sc:'#9a7000' },
+      { x:pL+(mx-pL)/2,   y:my+22,  m:'Maintenance',               s:'Low Income, Low Stress',    mc:'#445818', sc:'#607830' },
+      { x:mx+(pL+pw-mx)/2, y:my+22,  m:'GET OUT!!!!!!',              s:'Low Income, High Stress',   mc:'#8a1818', sc:'#aa2828' },
     ].forEach(l => {
       ctx.font='700 11px "DM Sans",sans-serif'; ctx.fillStyle=l.mc; ctx.fillText(l.m,l.x,l.y);
       ctx.font='400 10px "DM Sans",sans-serif'; ctx.fillStyle=l.sc; ctx.fillText(l.s,l.x,l.y+15);
