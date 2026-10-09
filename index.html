@@ -324,7 +324,7 @@
   }
 
   function getQuadrant(roi, robs) {
-    const hi = roi >= 6, hs = robs >= 6;
+    const hi = roi > 5, hs = robs > 5;
     if ( hi && !hs) return { label: 'Double Down',                color: '#1a4d30', bg: '#d4edde', border: '#2a7a4a', dot: '#2a7a4a' };
     if ( hi &&  hs) return { label: 'Automate or Position for Sale', color: '#6b4e00', bg: '#fff5c2', border: '#c49000', dot: '#c49000' };
     if (!hi && !hs) return { label: 'Maintenance',                color: '#3d5010', bg: '#e8f5c0', border: '#6a8c1e', dot: '#6a8c1e' };
@@ -425,14 +425,14 @@
     ctx.fillText('How Much Brain Does It Take Up? (ROBS)',pL+pw/2,H-6);
 
     ctx.font='400 9px "DM Sans",sans-serif'; ctx.fillStyle='#aaa8a0';
-    for (let i=1;i<=10;i++) {
-      ctx.textAlign='center'; ctx.fillText(i, pL+((i-0.5)/10)*pw, pT+ph+13);
-      ctx.textAlign='right';  ctx.fillText(i, pL-5, pT+ph-((i-0.5)/10)*ph+3);
+    for (let i=0;i<=10;i++) {
+      ctx.textAlign='center'; ctx.fillText(i, pL+(i/10)*pw, pT+ph+13);
+      ctx.textAlign='right';  ctx.fillText(i, pL-5, pT+ph-(i/10)*ph+3);
     }
 
     assets.forEach(a => {
-      const px = pL+((a.robs-0.5)/10)*pw;
-      const py = pT+ph-((a.roi-0.5)/10)*ph;
+      const px = pL+(a.robs/10)*pw;
+      const py = pT+ph-(a.roi/10)*ph;
       const q  = getQuadrant(a.roi, a.robs);
       ctx.beginPath(); ctx.arc(px,py,16,0,Math.PI*2);
       ctx.fillStyle=q.dot+'28'; ctx.fill();
