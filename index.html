@@ -388,7 +388,7 @@
     const W = displayW, H = 440;
     const pL = 52, pR = 20, pT = 20, pB = 52;
     const pw = W-pL-pR, ph = H-pT-pB;
-    const mx = pL+pw/2, my = pT+ph/2;
+    const mx = pL+((5-1)/9)*pw, my = pT+ph-((5-1)/9)*ph;
 
     ctx.clearRect(0, 0, W, H);
 
