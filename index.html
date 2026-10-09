@@ -324,7 +324,7 @@
   }
 
   function getQuadrant(roi, robs) {
-    const hi = roi > 5, hs = robs > 5;
+    const hi = roi >= 6, hs = robs >= 6;
     if ( hi && !hs) return { label: 'Double Down',                color: '#1a4d30', bg: '#d4edde', border: '#2a7a4a', dot: '#2a7a4a' };
     if ( hi &&  hs) return { label: 'Automate or Position for Sale', color: '#6b4e00', bg: '#fff5c2', border: '#c49000', dot: '#c49000' };
     if (!hi && !hs) return { label: 'Maintenance',                color: '#3d5010', bg: '#e8f5c0', border: '#6a8c1e', dot: '#6a8c1e' };
@@ -388,23 +388,23 @@
     const W = displayW, H = 440;
     const pL = 52, pR = 20, pT = 20, pB = 52;
     const pw = W-pL-pR, ph = H-pT-pB;
-    const mx = pL+((5-1)/9)*pw, my = pT+ph-((5-1)/9)*ph;
+    const mx = pL+pw/2, my = pT+ph/2;
 
     ctx.clearRect(0, 0, W, H);
 
     [
-      { x:pL,  y:pT,  w:mx-pL,      h:my-pT,      c:'#c8edda' },
-      { x:mx,  y:pT,  w:pL+pw-mx,   h:my-pT,      c:'#fff0a0' },
-      { x:pL,  y:my,  w:mx-pL,      h:pT+ph-my,   c:'#dff09a' },
-      { x:mx,  y:my,  w:pL+pw-mx,   h:pT+ph-my,   c:'#fbbfbf' },
+      { x:pL,  y:pT,  w:pw/2, h:ph/2, c:'#c8edda' },
+      { x:mx,  y:pT,  w:pw/2, h:ph/2, c:'#fff0a0' },
+      { x:pL,  y:my,  w:pw/2, h:ph/2, c:'#dff09a' },
+      { x:mx,  y:my,  w:pw/2, h:ph/2, c:'#fbbfbf' },
     ].forEach(f => { ctx.fillStyle=f.c; ctx.fillRect(f.x,f.y,f.w,f.h); });
 
     ctx.textAlign = 'center';
     [
-      { x:pL+(mx-pL)/2, y:pT+22,  m:'DOUBLE DOWN',            s:'High Income, Low Stress',    mc:'#1e6b38', sc:'#3a8a52' },
-      { x:mx+(pL+pw-mx)/2, y:pT+22,  m:'Automate or position for sale', s:'High Income, High Stress',  mc:'#7a5800', sc:'#9a7000' },
-      { x:pL+(mx-pL)/2,   y:my+22,  m:'Maintenance',               s:'Low Income, Low Stress',    mc:'#445818', sc:'#607830' },
-      { x:mx+(pL+pw-mx)/2, y:my+22,  m:'GET OUT!!!!!!',              s:'Low Income, High Stress',   mc:'#8a1818', sc:'#aa2828' },
+      { x:pL+pw*.25, y:pT+22,  m:'DOUBLE DOWN',                   s:'High Income, Low Stress',   mc:'#1e6b38', sc:'#3a8a52' },
+      { x:pL+pw*.75, y:pT+22,  m:'Automate or position for sale',  s:'High Income, High Stress',  mc:'#7a5800', sc:'#9a7000' },
+      { x:pL+pw*.25, y:my+22,  m:'Maintenance',                    s:'Low Income, Low Stress',    mc:'#445818', sc:'#607830' },
+      { x:pL+pw*.75, y:my+22,  m:'GET OUT!!!!!!',                  s:'Low Income, High Stress',   mc:'#8a1818', sc:'#aa2828' },
     ].forEach(l => {
       ctx.font='700 11px "DM Sans",sans-serif'; ctx.fillStyle=l.mc; ctx.fillText(l.m,l.x,l.y);
       ctx.font='400 10px "DM Sans",sans-serif'; ctx.fillStyle=l.sc; ctx.fillText(l.s,l.x,l.y+15);
@@ -426,13 +426,13 @@
 
     ctx.font='400 9px "DM Sans",sans-serif'; ctx.fillStyle='#aaa8a0';
     for (let i=1;i<=10;i++) {
-      ctx.textAlign='center'; ctx.fillText(i, pL+((i-1)/9)*pw, pT+ph+13);
-      ctx.textAlign='right';  ctx.fillText(i, pL-5, pT+ph-((i-1)/9)*ph+3);
+      ctx.textAlign='center'; ctx.fillText(i, pL+((i-0.5)/10)*pw, pT+ph+13);
+      ctx.textAlign='right';  ctx.fillText(i, pL-5, pT+ph-((i-0.5)/10)*ph+3);
     }
 
     assets.forEach(a => {
-      const px = pL+((a.robs-1)/9)*pw;
-      const py = pT+ph-((a.roi-1)/9)*ph;
+      const px = pL+((a.robs-0.5)/10)*pw;
+      const py = pT+ph-((a.roi-0.5)/10)*ph;
       const q  = getQuadrant(a.roi, a.robs);
       ctx.beginPath(); ctx.arc(px,py,16,0,Math.PI*2);
       ctx.fillStyle=q.dot+'28'; ctx.fill();
